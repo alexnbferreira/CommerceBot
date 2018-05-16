@@ -200,6 +200,7 @@ class CBTBot:
         for sub in self.subscribers:
             self.bot.send_message(chat_id=sub, text=text,
                                   parse_mode=telegram.ParseMode.MARKDOWN)
+            time.sleep(1)
 
 
 if __name__ == "__main__":
