@@ -1,0 +1,4 @@
+requests==2.18.4
+python_telegram_bot==10.0.2
+telegram==0.0.1
+PyYAML==3.12

@@ -1,0 +1,4 @@
+token: YOUR_TG_TOKEN
+git:
+  password: YOUR_PASS
+  user: YOUR_USER
