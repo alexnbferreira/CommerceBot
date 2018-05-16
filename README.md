@@ -22,8 +22,16 @@ pip install -r requirements.txt
 
 ## Deployment
 
-To deploy, all yuo need to do is execute the file "main_bot.py"
+To deploy: 
 
+Edit the [config.yaml](config.yaml) file, inserting telegram API key, and Git credentials for API use.
+```
+token: YOUR_TG_TOKEN
+git:
+  password: YOUR_PASS
+  user: YOUR_USER
+```
+Then execute the file "main_bot.py"
 ```
 python main_bot.py
 ```
