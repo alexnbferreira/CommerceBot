@@ -10,6 +10,7 @@ import telegram
 import yaml
 from requests.auth import HTTPBasicAuth
 from telegram.ext import CommandHandler, Dispatcher, Updater
+from parse_votes import get_votes_dynamic
 
 token = ""
 logging.basicConfig()
@@ -62,8 +63,13 @@ class CBTBot:
             "ethprice", self.get_current_eth_price))
         self.dispatcher.add_handler(CommandHandler(
             "btcprice", self.get_current_btc_price))
+        self.dispatcher.add_handler(CommandHandler(
+            "vote", self.ethfinex_vote))
+        self.dispatcher.add_handler(CommandHandler(
+            "say", self.say_something, pass_args=True))
         self.fetch_subs()
         self.updater.start_polling()
+        self.updater.idle()
 
     def get_repos(self):
         self.repos = []
@@ -93,6 +99,13 @@ class CBTBot:
             if user == adm.user.id:
                 return True
         return False
+
+    def say_something(self, bot, update, args):
+        if update.effective_user.id != 332479442:
+            return 1
+        chat_id = args[0]
+        user_says = " ".join(args[1:])
+        bot.send_message(text=user_says, chat_id=chat_id, parse_mode=telegram.ParseMode.MARKDOWN)
 
     def fetch_subs(self):
         fp = open(git_file, "r")
@@ -202,6 +215,16 @@ class CBTBot:
                                   parse_mode=telegram.ParseMode.MARKDOWN)
             time.sleep(1)
 
+    def ethfinex_vote(self, bot, update):
+      id = update.message.chat_id
+      bot.send_chat_action(chat_id=id, action=telegram.ChatAction.TYPING)
+      ranks_timeleft = get_votes_dynamic()
+      ranks = ranks_timeleft[0]
+      timeleft = ranks_timeleft[1]
+      text = """[Remember to vote for us to be listed on Ethfinex!](https://nectar.community/#/listings)\n*{}*\n\nThe current ranking is:\n""".format(timeleft)
+      for token in ranks:
+        text+="{} - *{}*\n".format(token[0], token[1])
+      bot.send_message(chat_id=id, text=text, parse_mode=telegram.ParseMode.MARKDOWN)
 
 if __name__ == "__main__":
     log.info ("Starting CommerceBlock git bot...")
